@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataSci Collab Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;500;700&display=swap');
+
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        body {
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 30px 20px;
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- Header Styling --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 5px;
+            font-weight: 300;
+        }
+
+        .branch-tag {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent-cyan);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+        }
+
+        /* --- Alerts & Badges --- */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .badge {
+            background: rgba(236, 72, 153, 0.1);
+            color: var(--accent-pink);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+        }
+
+        /* --- Grid Layouts --- */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+        }
+
+        /* --- Glassmorphism Cards --- */
+        .card, .panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover, .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .card {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card h3 {
+            margin: 0 0 15px 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .card .value {
+            font-family: var(--font-mono);
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 5px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .card .label {
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            font-weight: 500;
+        }
+
+        /* --- Panel Lists --- */
+        .panel h3 {
+            margin: 0 0 20px 0;
+            font-size: 1rem;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 15px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 0.95rem;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+        
+        .stat-value {
+            font-family: var(--font-mono);
+            color: var(--accent-cyan);
+            font-weight: 600;
+            background: rgba(6, 182, 212, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        /* Responsive tweak */
+        @media (max-width: 768px) {
+            header { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <header>
+        <div>
+            <h1>DataSci Collab Dashboard</h1>
+            <div class="subtitle">Student Performance Dataset • Git Collaborative Activity</div>
+        </div>
+        <div class="branch-tag">● branch: feature/statistics</div>
+    </header>
+
+    <main>
+        <div class="section-title">
+            03 • Statistical Analysis <span class="badge">STUDENT 3 LIVE</span>
+        </div>
+
+        <div class="grid-4">
+            <div class="card">
+                <h3>Mean Score</h3>
+                <div class="value" id="val-mean">0</div>
+                <div class="label">Average Class Performance</div>
+            </div>
+            <div class="card">
+                <h3>Median Score</h3>
+                <div class="value" id="val-median">0</div>
+                <div class="label">Middle Dataset Value</div>
+            </div>
+            <div class="card">
+                <h3>Std Deviation</h3>
+                <div class="value" id="val-std">0</div>
+                <div class="label">Data Dispersion (σ)</div>
+            </div>
+            <div class="card">
+                <h3>Mode</h3>
+                <div class="value" id="val-mode">0</div>
+                <div class="label">Most Frequent Score</div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="panel">
+                <h3>Descriptive Statistics - Final Score</h3>
+                <div class="stat-row">
+                    <span class="stat-label">Total Records (n)</span>
+                    <span class="stat-value" id="stat-count">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Minimum Score</span>
+                    <span class="stat-value" id="stat-min">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Maximum Score</span>
+                    <span class="stat-value" id="stat-max">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Range</span>
+                    <span class="stat-value" id="stat-range">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Variance (σ²)</span>
+                    <span class="stat-value" id="stat-var">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Standard Deviation (σ)</span>
+                    <span class="stat-value" id="stat-std-full">0</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Correlation & Regression (Hours → Score)</h3>
+                <div class="stat-row">
+                    <span class="stat-label">Pearson Correlation (r)</span>
+                    <span class="stat-value" id="reg-r">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Interpretation</span>
+                    <span class="stat-value" id="reg-interp" style="color: var(--accent-pink); background: rgba(236,72,153,0.1);">Calculating...</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Slope (m)</span>
+                    <span class="stat-value" id="reg-m">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Y-Intercept (b)</span>
+                    <span class="stat-value" id="reg-b">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Fit Quality (R²)</span>
+                    <span class="stat-value" id="reg-r2">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Linear Equation</span>
+                    <span class="stat-value" id="reg-eq" style="color: var(--accent-purple); background: rgba(139,92,246,0.1);">y = mx + b</span>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
